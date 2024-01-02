@@ -6,11 +6,16 @@ const router = express.Router();
 
 const {getContact} = require('../controllers/contactController');
 
-router.route('/').get(getContact); 
+const Contact = require('../models/contactModel');
+
+
+// router.route('/').get(getContact); 
 
 router.route("/").get(asyncHandler(async (req,res)=>{
 
-    res.status(200).json({ message : "Hello !"});
+    const contacts = await Contact.find();
+
+    res.status(200).json(contacts);
 
 }));
 
@@ -22,14 +27,21 @@ router.route("/").post(asyncHandler(async (req,res)=>{
 
     if (!name || !email){
 
+    
         res.status(400);
+
         throw new Error("All fields are mandatory.");
+    
     }
 
-    res.status(200).json({ message : "Create Contacts"});
+    const contact = await Contact.create({name, email});
+
+    res.status(200).json(contact);
 
 }));
 router.route("/:id").get(asyncHandler(async (req,res)=>{
+
+    const contact = 
 
     res.status(200).json({ message : `Update Contacts for ${req.params.id}`});
 
