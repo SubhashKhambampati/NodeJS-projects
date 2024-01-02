@@ -41,19 +41,50 @@ router.route("/").post(asyncHandler(async (req,res)=>{
 }));
 router.route("/:id").get(asyncHandler(async (req,res)=>{
 
-    const contact = 
+    const idd = req.params.id;
 
-    res.status(200).json({ message : `Update Contacts for ${req.params.id}`});
+    const contact = await Contact.findById(`${idd}`);
+
+    
+
+    if (!contact){
+        res.status(404);
+        throw new Error(`Could not find contact`);
+    }
+
+
+
+    res.status(200).json(contact);
+    // res.send(req.params.id , contact);
 
 }));
 router.route("/:id").put(asyncHandler(async (req,res)=>{
 
-    res.status(200).json({ message : "Updated Contacts"});
+    const contact = await Contact.findById(req.params.id);
+
+    if (!contact){
+        res.status(404);
+        throw new Error(`Could not find contact`);
+    }
+
+    const updateContact = await Contact.findByIdAndUpdate(req.params.id ,req.body ,{new:true});
+
+
+    res.status(200).json(updateContact);
+
 
 }));
 router.route("/:id").delete(asyncHandler(async (req,res)=>{
+    const contact = await Contact.findById(req.params.id);
 
-    res.status(200).json({ message : `Delete Contacts for ${req.params.id}`});
+    if (!contact){
+        res.status(404);
+        throw new Error(`Could not find contact`);
+    }
+
+    await Contact.remove();
+
+    res.status(200).json(contact);
 
 }));
 

@@ -4,6 +4,8 @@ const app = express();
 
 const connectDb = require('./config/dbConnection');
 
+const userRoutes = require("./Routes/userRoutes");
+
 connectDb();
 
 const errorHandler = require('./Middleware/errorHandler');
@@ -13,6 +15,8 @@ app.use(express.json());
 const port = process.env.PORT ||  3003;
 
 app.use("/" ,require("./Routes/contactRoutes"));
+
+app.use("/users" ,require("./Routes/userRoutes"));
 
 app.use(errorHandler);
 
