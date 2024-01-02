@@ -14,17 +14,34 @@ const registerUser = asyncHandler(async (req,res)=>{
 
     }
 
-    const user = await  User.findOne({email});
+    const userAvailable = await  User.findOne({email});
 
-    if(user){
+
+    if(userAvailable){
 
         res.status(400);
         throw new Error("User already Registered");
 
     }
 
+    const hashedPassword = await bcrypt.hash(password , 10);
+    console.log("Hashed Password : " , hashedPassword);
 
-    res.json(user);
+    const user = await User.create({
+        username,email,password
+    });
+
+    if (user){
+        res.status(201).json({_id: user.id , email:user.email});
+
+    }
+    else{
+        res.status(404);
+        throw new Error("User Data  is  not Valid");
+    }
+
+
+   
 
 });
 
